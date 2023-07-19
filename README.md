@@ -1,4 +1,4 @@
-# McDeepNet: Trained on 20k McDonalds Reviews
+# 🍔 McDeepNet: Trained on 20k McDonalds Review 🍔 
 
 This project contains a Machine Learning (ML) model that is trained on 20,000 McDonald's reviews. The ML model uses Recurrent Neural Networks (RNNs) to learn patterns from the provided reviews and then, using this learning, generates a unique review of its own. The model can produce different types of output based on seed text and the 'temperature' set by the user.
 
