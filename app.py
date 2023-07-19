@@ -41,11 +41,11 @@ def generate_sentence(model, tokenizer, max_length, seed_text, num_words, temper
     return seed_text
 
 # Set up the UI
-st.title(" 🍔 Mcdeepnet: 🍔 ")
+st.title(" 🍔 McDeepNet: Trained on 20k McDonalds Review 🍔 ")
 
 # Form to take user inputs
 with st.form(key='my_form'):
-    seed_text = st.text_input(label='Enter the seed text')
+    seed_text = st.text_input(label='Enter the seed text for completion')
     num_words = st.number_input(label='Enter the number of words to generate', min_value=1, max_value=100, value=5)
     temperature = st.slider(label='Set temperature', min_value=0.1, max_value=3.0, value=1.0, step=0.1)
     submit_button = st.form_submit_button(label='Generate Text')
@@ -55,14 +55,14 @@ if submit_button:
     sentence = generate_sentence(model, tokenizer, max_length, seed_text, num_words, temperature)
     st.write(sentence)
     
-    # Count word frequencies
-    word_freq = Counter(sentence.split())
+    # # Count word frequencies
+    # word_freq = Counter(sentence.split())
     
-    # Create a DataFrame for the frequencies
-    freq_df = pd.DataFrame(list(word_freq.items()), columns=['Word', 'Frequency'])
+    # # Create a DataFrame for the frequencies
+    # freq_df = pd.DataFrame(list(word_freq.items()), columns=['Word', 'Frequency'])
     
-    # Create a Plotly Express bar chart
-    fig = px.bar(freq_df, x='Word', y='Frequency', title='Word Frequencies')
+    # # Create a Plotly Express bar chart
+    # fig = px.bar(freq_df, x='Word', y='Frequency', title='Word Frequencies')
     
-    # Display the chart
-    st.plotly_chart(fig)
+    # # Display the chart
+    # st.plotly_chart(fig)
