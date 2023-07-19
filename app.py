@@ -42,9 +42,10 @@ def generate_sentence(model, tokenizer, max_length, seed_text, num_words, temper
     return seed_text, word_probs
 
 # Set up the UI
-st.title(" 🍔 McDeepNet 🍔 ")
-st.subheader("Trained on 20k McDonalds Review's")
-st.text("Welcome to McDeepNet! This project uses a Machine Learning (ML) model trained on 20,000 McDonald's reviews. It's an interesting application that employs Recurrent Neural Networks (RNNs) to learn patterns from these reviews and, subsequently, generates a unique review of its own. The model can produce varying types of output based on a seed text and a temperature parameter provided by the user.")
+st.title("🍔 McDeepNet 🍔")
+st.subheader("Trained on 20k McDonald's Reviews")
+st.text("Welcome to McDeepNet! This project uses a Machine Learning (ML) model trained on 20,000 McDonald's reviews. It's an interesting application that employs Recurrent Neural Networks (RNNs) to learn patterns from these reviews and, subsequently, generates a unique review of its own.")
+st.text("The model can produce varying types of output based on a seed text and a temperature parameter provided by the user.")
 
 # Form to take user inputs
 with st.form(key='my_form'):
