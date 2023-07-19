@@ -2,7 +2,7 @@
 
 This project contains a Machine Learning (ML) model that is trained on 20,000 McDonald's reviews. The ML model uses Recurrent Neural Networks (RNNs) to learn patterns from the provided reviews and then, using this learning, generates a unique review of its own. The model can produce different types of output based on seed text and the 'temperature' set by the user.
 
-The application is built using [Streamlit](https://streamlit.io), a fast and easy way to build data applications, which handles the user interface (UI) for taking user inputs and displaying the model's generated review.
+The application is built using [Streamlit](https://streamlit.io), a fast and easy way to build data applications, which handles the user interface (UI) for taking user inputs and displaying the model's generated review. https://mcdonaldsnet.streamlit.app/
 
 ## How it works
 
