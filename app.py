@@ -41,7 +41,7 @@ def generate_sentence(model, tokenizer, max_length, seed_text, num_words, temper
     return seed_text
 
 # Set up the UI
-st.title(" 🍔 McDonalds Review 🍔 ")
+st.title(" 🍔 Mcdeepnet: 🍔 ")
 
 # Form to take user inputs
 with st.form(key='my_form'):
