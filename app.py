@@ -41,7 +41,7 @@ def generate_sentence(model, tokenizer, max_length, seed_text, num_words, temper
     return seed_text
 
 # Set up the UI
-st.title(" 🍔 McDeepNet: Trained on 20k McDonalds Review 🍔 ")
+st.title(" 🍔 McDeepNet: 20k McDonalds Review's 🍔 ")
 
 # Form to take user inputs
 with st.form(key='my_form'):
@@ -55,14 +55,3 @@ if submit_button:
     sentence = generate_sentence(model, tokenizer, max_length, seed_text, num_words, temperature)
     st.write(sentence)
     
-    # # Count word frequencies
-    # word_freq = Counter(sentence.split())
-    
-    # # Create a DataFrame for the frequencies
-    # freq_df = pd.DataFrame(list(word_freq.items()), columns=['Word', 'Frequency'])
-    
-    # # Create a Plotly Express bar chart
-    # fig = px.bar(freq_df, x='Word', y='Frequency', title='Word Frequencies')
-    
-    # # Display the chart
-    # st.plotly_chart(fig)
