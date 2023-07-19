@@ -1,3 +1,4 @@
+# library imports
 import streamlit as st
 import pickle
 import numpy as np
@@ -41,7 +42,8 @@ def generate_sentence(model, tokenizer, max_length, seed_text, num_words, temper
     return seed_text, word_probs
 
 # Set up the UI
-st.title(" 🍔 McDeepNet 🍔 \n Trained on 20k McDonalds Review's ")
+st.title(" 🍔 McDeepNet 🍔 ")
+st.subheader("Trained on 20k McDonalds Review's")
 st.text("This project contains a Machine Learning (ML) model that is trained on 20,000 McDonald's reviews. The ML model uses Recurrent Neural Networks (RNNs) to learn patterns from the provided reviews and then, using this learning, generates a unique review of its own. The model can produce different types of output based on seed text and the 'temperature' set by the user.")
 
 # Form to take user inputs
