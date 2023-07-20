@@ -56,6 +56,7 @@ with st.form(key='my_form'):
 # Generate and display the output on form submission
 if submit_button:
     sentence, word_probs = generate_sentence(model, tokenizer, max_length, seed_text, num_words, temperature)
+    st.write(word_probs)
     st.write(sentence)
     
     # Create dataframe to hold word probabilities and display in Streamlit
