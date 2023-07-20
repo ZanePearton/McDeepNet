@@ -73,7 +73,7 @@ if submit_button:
     
     # Create a Plotly Express bar chart
     fig = px.bar(freq_df, x='Word', y='Frequency', title='Word Frequencies')
-    fig = px.scatter_3d(df, x='Word', y='Frequency', z='word_probs')
+    fig = px.scatter_3d(freq_df, x='Word', y='Frequency', z='word_probs')
     
     # Display the chart
     st.plotly_chart(fig)
