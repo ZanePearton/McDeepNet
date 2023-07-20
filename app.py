@@ -6,6 +6,7 @@ import pandas as pd
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+import plotly.express as px
 
 # Load the model
 model = load_model('text_generation_model.h5')
@@ -59,6 +60,19 @@ if submit_button:
     st.write(word_probs)
     st.write(sentence)
     
-    # Create dataframe to hold word probabilities and display in Streamlit
-    prob_df = pd.DataFrame(word_probs, columns=["Word", "Probability"])
-    st.dataframe(prob_df)
+    # # Create dataframe to hold word probabilities and display in Streamlit
+    # prob_df = pd.DataFrame(word_probs, columns=["Word", "Probability"])
+    # st.dataframe(prob_df)
+
+
+    # Count word frequencies
+    word_freq = Counter(sentence.split())
+    
+    # Create a DataFrame for the frequencies
+    freq_df = pd.DataFrame(list(word_freq.items()), columns=['Word', 'Frequency'])
+    
+    # Create a Plotly Express bar chart
+    fig = px.bar(freq_df, x='Word', y='Frequency', title='Word Frequencies')
+    
+    # Display the chart
+    st.plotly_chart(fig)
