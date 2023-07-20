@@ -7,6 +7,7 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import plotly.express as px
+from collections import Counter
 
 # Load the model
 model = load_model('text_generation_model.h5')
@@ -63,7 +64,6 @@ if submit_button:
     # # Create dataframe to hold word probabilities and display in Streamlit
     # prob_df = pd.DataFrame(word_probs, columns=["Word", "Probability"])
     # st.dataframe(prob_df)
-
 
     # Count word frequencies
     word_freq = Counter(sentence.split())
