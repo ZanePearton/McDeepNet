@@ -4,6 +4,8 @@ This project contains a Machine Learning (ML) model that is trained on 20,000 Mc
 
 The application is built using [Streamlit](https://streamlit.io), a fast and easy way to build data applications, which handles the user interface (UI) for taking user inputs and displaying the model's generated review. 
 
+[Test it out! url:mcdeeepnet.streamlit.app](https://mcdeeepnet.streamlit.app/)
+
 ## How it works
 
 This program reads in a seed text provided by the user along with the number of words to generate and the temperature. It then passes these inputs to the model to generate a review. 
