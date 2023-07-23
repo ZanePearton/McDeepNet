@@ -4,7 +4,7 @@ This project contains a Machine Learning (ML) model that is trained on 20,000 Mc
 
 The application is built using [Streamlit](https://streamlit.io), a fast and easy way to build data applications, which handles the user interface (UI) for taking user inputs and displaying the model's generated review. 
 
-[Test it out! url:mcdeeepnet.streamlit.app](https://mcdeeepnet.streamlit.app/)
+[Test it out! Link - mcdeeepnet.streamlit.app](https://mcdeeepnet.streamlit.app/)
 
 ## How it works
 
