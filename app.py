@@ -79,6 +79,10 @@
 #     # Display the chart
 
 
+
+#     # Value of 'z' is not the name of a column in 'data_frame'. Expected one of ['Word', 'Frequency'] but received: word_probs
+
+
 # library imports
 import streamlit as st
 import pickle
@@ -89,10 +93,9 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import plotly.express as px
 from collections import Counter
-from tensorflow.keras.initializers import Orthogonal
 
 # Load the model
-model = load_model('text_generation_model.h5', custom_objects={'Orthogonal': Orthogonal})
+model = load_model('text_generation_model.h5')
 
 # Load the tokenizer
 with open('tokenizer.pickle', 'rb') as handle:
@@ -108,14 +111,19 @@ def generate_sentence(model, tokenizer, max_length, seed_text, num_words, temper
         sequence = tokenizer.texts_to_sequences([seed_text])[0]
         sequence = pad_sequences([sequence], maxlen=max_length-1, padding='pre')
         probabilities = model.predict(sequence, verbose=0)[0]
-        
+
         # Apply temperature
+        probabilities = np.asarray(probabilities).astype('float64')
         probabilities = np.log(probabilities) / temperature
         exp_preds = np.exp(probabilities)
         probabilities = exp_preds / np.sum(exp_preds)
 
-        predicted = np.random.choice(len(probabilities), p=probabilities)
-        output_word = tokenizer.index_word.get(predicted, '')
+        predicted = np.random.choice(range(len(probabilities)), p=probabilities)
+        output_word = ""
+        for word, index in tokenizer.word_index.items():
+            if index == predicted:
+                output_word = word
+                break
         seed_text += " " + output_word
         word_probs.append((output_word, probabilities[predicted]))
     return seed_text, word_probs
@@ -146,11 +154,4 @@ if submit_button:
     
     # Create a Plotly Express bar chart
     fig = px.bar(freq_df, x='Word', y='Frequency', title='Word Frequencies')
-    
-    # Display the chart
     st.plotly_chart(fig)
-
-#     st.plotly_chart(fig)
-#     # freq_df.show()
-
-#     # Value of 'z' is not the name of a column in 'data_frame'. Expected one of ['Word', 'Frequency'] but received: word_probs
