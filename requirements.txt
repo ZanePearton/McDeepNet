@@ -3,4 +3,5 @@ numpy
 matplotlib
 plotly
 pandas
-
+h5py
+streamlit
