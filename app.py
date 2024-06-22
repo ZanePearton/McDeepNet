@@ -154,8 +154,13 @@ if submit_button:
     freq_df = pd.DataFrame(list(word_freq.items()), columns=['Word', 'Frequency'])
     
     # Create a Plotly Express bar chart
-    fig_bar = px.bar(freq_df, x='Word', y='Frequency', title='Word Frequencies')
-    st.plotly_chart(fig_bar)
+    # fig_bar = px.bar(freq_df, x='Word', y='Frequency', title='Word Frequencies')
+    # st.plotly_chart(fig_bar)
+    
+    # Create a Plotly Express scatter plot
+    fig_scatter = px.scatter(freq_df, x='Word', y='Frequency', size='Frequency', title='Word Frequencies', 
+                             hover_name='Word', size_max=60)
+    st.plotly_chart(fig_scatter)
 
 # # library imports
 # import streamlit as st
