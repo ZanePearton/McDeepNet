@@ -1,6 +1,7 @@
 # Library imports
 import streamlit as st
 import pickle
+import json
 import numpy as np
 import pandas as pd
 from tensorflow.keras.models import model_from_json
@@ -15,7 +16,8 @@ def load_and_adjust_model(model_path):
     with h5py.File(model_path, 'r') as f:
         model_config = f.attrs.get('model_config')
         if model_config is not None:
-            model_config = model_config.decode('utf-8')
+            if isinstance(model_config, bytes):
+                model_config = model_config.decode('utf-8')
             model_config = json.loads(model_config)
 
     # Remove unsupported arguments
