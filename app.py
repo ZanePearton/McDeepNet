@@ -3,27 +3,35 @@ import streamlit as st
 import pickle
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.text import Tokenizer
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.models import model_from_json
 from tensorflow.keras.initializers import Orthogonal
+import h5py
 import plotly.express as px
 from collections import Counter
 
-# Function to load model with custom objects and adjust configurations
-def load_model_with_custom_objects(model_path):
-    from tensorflow.keras.initializers import Orthogonal
-    custom_objects = {'Orthogonal': Orthogonal}
-    model = load_model(model_path, custom_objects=custom_objects)
-    
-    # Adjust the LSTM layers if necessary
-    for layer in model.layers:
-        if hasattr(layer, 'recurrent_initializer') and isinstance(layer.recurrent_initializer, Orthogonal):
-            layer.recurrent_initializer = Orthogonal(gain=1.0)
+# Function to load and adjust model configuration
+def load_and_adjust_model(model_path):
+    # Load model configuration
+    with h5py.File(model_path, 'r') as f:
+        model_config = f.attrs.get('model_config')
+        if model_config is not None:
+            model_config = model_config.decode('utf-8')
+            model_config = json.loads(model_config)
+
+    # Remove unsupported arguments
+    for layer_config in model_config['config']['layers']:
+        if 'config' in layer_config and 'time_major' in layer_config['config']:
+            del layer_config['config']['time_major']
+
+    # Recreate the model from the adjusted configuration
+    model = model_from_json(json.dumps(model_config), custom_objects={'Orthogonal': Orthogonal})
+
+    # Load weights
+    model.load_weights(model_path)
     return model
 
 # Load the model
-model = load_model_with_custom_objects('text_generation_model.h5')
+model = load_and_adjust_model('text_generation_model.h5')
 
 # Load the tokenizer
 with open('tokenizer.pickle', 'rb') as handle:
