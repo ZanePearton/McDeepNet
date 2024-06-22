@@ -204,20 +204,29 @@ def generate_sentence(model, tokenizer, max_length, seed_text, num_words, temper
         word_probs.append((output_word, probabilities[0, predicted], context.copy()))
     return seed_text, word_probs
 
-# Function to create a tree diagram with context
+# Function to create a tree diagram with clearer context
 def create_tree_diagram(data):
     # Create a directed graph
     G = nx.DiGraph()
 
     # Add nodes and edges to the graph
     for i, (word, prob, context) in enumerate(data):
-        context_str = ' '.join(context)
-        G.add_node(i, label=word, probability=prob, context=context_str)
+        G.add_node(i, label=word, probability=prob)
         if i > 0:
             G.add_edge(i - 1, i)
 
-    # Get node positions for the layout
-    pos = nx.spring_layout(G)
+        # Add context nodes and edges
+        for j, ctx_word in enumerate(context[:-1]):
+            ctx_node = f"ctx_{i}_{j}"
+            G.add_node(ctx_node, label=ctx_word, probability=0)  # Context nodes have no probability
+            if j == 0:
+                G.add_edge(i - 1, ctx_node)  # Connect previous main word to first context word
+            else:
+                G.add_edge(f"ctx_{i}_{j-1}", ctx_node)  # Connect context words sequentially
+            G.add_edge(ctx_node, i)  # Connect context word to current main word
+
+    # Get node positions for the layout (hierarchical layout for better clarity)
+    pos = nx.spring_layout(G)  # or you can use pos = nx.planar_layout(G)
 
     # Create edge traces
     edge_x = []
@@ -247,7 +256,7 @@ def create_tree_diagram(data):
         x, y = pos[node]
         node_x.append(x)
         node_y.append(y)
-        node_text.append(f"{G.nodes[node]['label']} ({G.nodes[node]['probability']:.2f})")
+        node_text.append(f"{G.nodes[node]['label']} ({G.nodes[node]['probability']:.2f})" if G.nodes[node]['probability'] > 0 else G.nodes[node]['label'])
         node_color.append(G.nodes[node]['probability'])
 
     node_trace = go.Scatter(
