@@ -114,7 +114,7 @@ def create_tree_diagram(data):
                     layout=go.Layout(
                         title='Text Generation Tree Diagram',
                         titlefont_size=16,
-                        showlegend=True,
+                        showlegend=False,
                         hovermode='closest',
                         margin=dict(b=20, l=5, r=5, t=40),
                         xaxis=dict(showgrid=False, zeroline=False),
