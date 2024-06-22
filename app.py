@@ -79,7 +79,6 @@
 #     # Display the chart
 
 
-
 # Library imports
 import streamlit as st
 import pickle
@@ -89,15 +88,20 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.initializers import Orthogonal
-
 import plotly.express as px
 from collections import Counter
 
-# Function to load model with custom objects
+# Function to load model with custom objects and adjust configurations
 def load_model_with_custom_objects(model_path):
     from tensorflow.keras.initializers import Orthogonal
     custom_objects = {'Orthogonal': Orthogonal}
-    return load_model(model_path, custom_objects=custom_objects)
+    model = load_model(model_path, custom_objects=custom_objects)
+    
+    # Adjust the LSTM layers if necessary
+    for layer in model.layers:
+        if hasattr(layer, 'recurrent_initializer') and isinstance(layer.recurrent_initializer, Orthogonal):
+            layer.recurrent_initializer = Orthogonal(gain=1.0)
+    return model
 
 # Load the model
 model = load_model_with_custom_objects('text_generation_model.h5')
