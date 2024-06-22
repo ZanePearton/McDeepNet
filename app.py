@@ -1,57 +1,16 @@
-# Library imports
+# library imports
 import streamlit as st
 import pickle
-import json
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import model_from_json, Sequential
-from tensorflow.keras.layers import Embedding, LSTM, Dense
-from tensorflow.keras.initializers import Orthogonal
-import h5py
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
 import plotly.express as px
 from collections import Counter
 
-# Function to load and adjust model configuration
-def load_and_adjust_model(model_path):
-    try:
-        # Load model configuration
-        with h5py.File(model_path, 'r') as f:
-            model_config = f.attrs.get('model_config')
-            if model_config is not None:
-                if isinstance(model_config, bytes):
-                    model_config = model_config.decode('utf-8')
-                model_config = json.loads(model_config)
-    except Exception as e:
-        st.error(f"Error loading model configuration: {e}")
-        return None
-
-    # Remove unsupported arguments
-    for layer_config in model_config['config']['layers']:
-        if 'config' in layer_config and 'time_major' in layer_config['config']:
-            del layer_config['config']['time_major']
-
-    # Recreate the model from the adjusted configuration
-    custom_objects = {
-        'Orthogonal': Orthogonal,
-        'Sequential': Sequential,
-        'Embedding': Embedding,
-        'LSTM': LSTM,
-        'Dense': Dense
-    }
-    try:
-        model = model_from_json(json.dumps(model_config), custom_objects=custom_objects)
-        # Load weights
-        model.load_weights(model_path)
-    except Exception as e:
-        st.error(f"Error loading model weights: {e}")
-        return None
-    
-    return model
-
 # Load the model
-model = load_and_adjust_model('text_generation_model.h5')
-if model is None:
-    st.stop()  # Stop execution if the model could not be loaded
+model = load_model('text_generation_model.h5')
 
 # Load the tokenizer
 with open('tokenizer.pickle', 'rb') as handle:
@@ -74,7 +33,7 @@ def generate_sentence(model, tokenizer, max_length, seed_text, num_words, temper
         exp_preds = np.exp(probabilities)
         probabilities = exp_preds / np.sum(exp_preds)
 
-        predicted = np.random.choice(range(len(probabilities[0])), p=probabilities.ravel())
+        predicted = np.random.choice(range(len(probabilities[0])), p = probabilities.ravel())
         output_word = ""
         for word, index in tokenizer.word_index.items():
             if index == predicted:
@@ -102,6 +61,10 @@ if submit_button:
     st.write(word_probs)
     st.write(sentence)
     
+    # # Create dataframe to hold word probabilities and display in Streamlit
+    # prob_df = pd.DataFrame(word_probs, columns=["Word", "Probability"])
+    # st.dataframe(prob_df)
+
     # Count word frequencies
     word_freq = Counter(sentence.split())
     
@@ -110,4 +73,11 @@ if submit_button:
     
     # Create a Plotly Express bar chart
     fig = px.bar(freq_df, x='Word', y='Frequency', title='Word Frequencies')
+    # fig = px.scatter_3d(freq_df, x='1', y='1', z='1')
+    # fig = px.scatter_3d(df, x='sepal_length', y='sepal_width', z='petal_width',
+    #           color='green')
+    # Display the chart
     st.plotly_chart(fig)
+    # freq_df.show()
+
+    # Value of 'z' is not the name of a column in 'data_frame'. Expected one of ['Word', 'Frequency'] but received: word_probs
