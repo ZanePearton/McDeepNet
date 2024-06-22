@@ -80,8 +80,7 @@
 
 
 
-
-# library imports
+# Library imports
 import streamlit as st
 import pickle
 import numpy as np
@@ -89,13 +88,19 @@ import pandas as pd
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
-from keras.initializers import Orthogonal
+from tensorflow.keras.initializers import Orthogonal
 
 import plotly.express as px
 from collections import Counter
 
+# Function to load model with custom objects
+def load_model_with_custom_objects(model_path):
+    from tensorflow.keras.initializers import Orthogonal
+    custom_objects = {'Orthogonal': Orthogonal}
+    return load_model(model_path, custom_objects=custom_objects)
+
 # Load the model
-model = load_model('text_generation_model.h5')
+model = load_model_with_custom_objects('text_generation_model.h5')
 
 # Load the tokenizer
 with open('tokenizer.pickle', 'rb') as handle:
