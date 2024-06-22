@@ -130,7 +130,7 @@ st.caption("Welcome to McDeepNet! This project uses a Machine Learning (ML) mode
 # Form to take user inputs
 with st.form(key='my_form'):
     seed_text = st.text_input(label='Enter the seed text for sentence completion')
-    num_words = st.number_input(label='Enter the number of words to generate', min_value=1, max_value=100, value=5)
+    num_words = st.number_input(label='Enter the number of words to generate', min_value=1, max_value=100, value=50)
     temperature = st.slider(label='Set temperature', min_value=0.1, max_value=3.0, value=1.0, step=0.1)
     submit_button = st.form_submit_button(label='Generate Text')
 
