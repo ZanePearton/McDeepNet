@@ -13,13 +13,17 @@ from collections import Counter
 
 # Function to load and adjust model configuration
 def load_and_adjust_model(model_path):
-    # Load model configuration
-    with h5py.File(model_path, 'r') as f:
-        model_config = f.attrs.get('model_config')
-        if model_config is not None:
-            if isinstance(model_config, bytes):
-                model_config = model_config.decode('utf-8')
-            model_config = json.loads(model_config)
+    try:
+        # Load model configuration
+        with h5py.File(model_path, 'r') as f:
+            model_config = f.attrs.get('model_config')
+            if model_config is not None:
+                if isinstance(model_config, bytes):
+                    model_config = model_config.decode('utf-8')
+                model_config = json.loads(model_config)
+    except Exception as e:
+        st.error(f"Error loading model configuration: {e}")
+        return None
 
     # Remove unsupported arguments
     for layer_config in model_config['config']['layers']:
@@ -34,14 +38,20 @@ def load_and_adjust_model(model_path):
         'LSTM': LSTM,
         'Dense': Dense
     }
-    model = model_from_json(json.dumps(model_config), custom_objects=custom_objects)
-
-    # Load weights
-    model.load_weights(model_path)
+    try:
+        model = model_from_json(json.dumps(model_config), custom_objects=custom_objects)
+        # Load weights
+        model.load_weights(model_path)
+    except Exception as e:
+        st.error(f"Error loading model weights: {e}")
+        return None
+    
     return model
 
 # Load the model
 model = load_and_adjust_model('text_generation_model.h5')
+if model is None:
+    st.stop()  # Stop execution if the model could not be loaded
 
 # Load the tokenizer
 with open('tokenizer.pickle', 'rb') as handle:
