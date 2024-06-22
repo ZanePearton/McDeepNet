@@ -102,7 +102,7 @@ def create_tree_diagram(data):
             size=10,
             color=node_color,
             colorbar=dict(
-                thickness=15,
+                thickness=1,
                 title='Probability',
                 xanchor='left',
                 titleside='right'
