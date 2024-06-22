@@ -154,7 +154,6 @@
 #     fig_bar = px.bar(freq_df, x='Word', y='Frequency', title='Word Frequencies')
 #     st.plotly_chart(fig_bar)
 
-# library imports
 import streamlit as st
 import pickle
 import numpy as np
@@ -204,7 +203,7 @@ def generate_sentence(model, tokenizer, max_length, seed_text, num_words, temper
         word_probs.append((output_word, probabilities[0, predicted], context.copy()))
     return seed_text, word_probs
 
-# Function to create a tree diagram with clearer context
+# Function to create a hierarchical tree diagram
 def create_tree_diagram(data):
     # Create a directed graph
     G = nx.DiGraph()
@@ -213,15 +212,19 @@ def create_tree_diagram(data):
     for i, (word, prob, context) in enumerate(data):
         main_node = f"main_{i}"
         G.add_node(main_node, label=word, probability=prob)
-        
+
         # Add context nodes and edges
         for j, ctx_word in enumerate(context):
             ctx_node = f"ctx_{i}_{j}"
             G.add_node(ctx_node, label=ctx_word, probability=0)  # Context nodes have no probability
-            G.add_edge(ctx_node, main_node)  # Connect context word to current main word
+            if j == 0:
+                G.add_edge(main_node if i == 0 else f"main_{i-1}", ctx_node)  # Connect previous main word to first context word
+            else:
+                G.add_edge(f"ctx_{i}_{j-1}", ctx_node)  # Connect context words sequentially
+        G.add_edge(f"ctx_{i}_{len(context)-1}", main_node)  # Connect last context word to current main word
 
     # Get node positions for the layout
-    pos = nx.spring_layout(G)
+    pos = nx.multipartite_layout(G, subset_key=lambda n: n.split('_')[1])
 
     # Create edge traces
     edge_x = []
