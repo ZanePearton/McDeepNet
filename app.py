@@ -313,7 +313,6 @@
 #     # Create a Plotly Express bar chart
 #     fig_bar = px.bar(freq_df, x='Word', y='Frequency', title='Word Frequencies')
 #     st.plotly_chart(fig_bar)
-
 import streamlit as st
 import pickle
 import numpy as np
@@ -363,31 +362,6 @@ def generate_sentence(model, tokenizer, max_length, seed_text, num_words, temper
         word_probs.append((output_word, probabilities[predicted], context.copy()))
     return seed_text, word_probs
 
-def hierarchy_pos(G, root=None, width=1., vert_gap=0.2, vert_loc=0, xcenter=0.5):
-    """
-    If the graph is a tree, this will return the positions to plot it in a hierarchical layout.
-    """
-    pos = _hierarchy_pos(G, root, width, vert_gap, vert_loc, xcenter)
-    return pos
-
-def _hierarchy_pos(G, root, width=1., vert_gap=0.2, vert_loc=0, xcenter=0.5, pos=None, parent=None, parsed=[]):
-    if pos is None:
-        pos = {root: (xcenter, vert_loc)}
-    else:
-        pos[root] = (xcenter, vert_loc)
-        
-    children = list(G.neighbors(root))
-    if not isinstance(G, nx.DiGraph) and parent is not None:
-        children.remove(parent)  
-    if len(children) != 0:
-        dx = width / len(children) 
-        nextx = xcenter - width/2 - dx/2
-        for child in children:
-            nextx += dx
-            pos = _hierarchy_pos(G, child, width=dx, vert_gap=vert_gap, vert_loc=vert_loc-vert_gap, xcenter=nextx, pos=pos, parent=root, parsed=parsed) 
-    return pos
-
-# Function to create a tree diagram with clearer context
 def create_tree_diagram(data):
     # Create a directed graph
     G = nx.DiGraph()
@@ -404,11 +378,7 @@ def create_tree_diagram(data):
             G.add_edge(ctx_node, main_node)  # Connect context word to current main word
 
     # Get node positions for the layout
-    try:
-        pos = hierarchy_pos(G, root="main_0")
-    except KeyError:
-        st.error("Error: Could not create the hierarchy layout.")
-        return None
+    pos = nx.spring_layout(G)
 
     # Create edge traces
     edge_x = []
@@ -477,6 +447,7 @@ def create_tree_diagram(data):
                     ))
     return fig
 
+
 # Set up the UI
 st.title("🍔 McDeepNet 🍔")
 st.subheader("Trained on 20k McDonald's Reviews")
@@ -498,8 +469,7 @@ if submit_button:
     word_freq = Counter(sentence.split())
     # Create and display the tree diagram
     fig_tree = create_tree_diagram(word_probs)
-    if fig_tree:
-        st.plotly_chart(fig_tree)
+    st.plotly_chart(fig_tree)
     
     # Create a DataFrame for the frequencies
     freq_df = pd.DataFrame(list(word_freq.items()), columns=['Word', 'Frequency'])
