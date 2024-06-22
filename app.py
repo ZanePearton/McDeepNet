@@ -21,10 +21,10 @@ with open('tokenizer.pickle', 'rb') as handle:
 
 # Maximum length of sequence, adjust as necessary
 max_length = 442  # Update this to the maximum length of sequence that you trained your model with
-
-# Function to generate a sentence
+# Function to generate a sentence with context
 def generate_sentence(model, tokenizer, max_length, seed_text, num_words, temperature):
     word_probs = []
+    context = seed_text.split()[-3:]  # Get the last three words as initial context
     for _ in range(num_words):
         sequence = tokenizer.texts_to_sequences([seed_text])[0]
         sequence = pad_sequences([sequence], maxlen=max_length-1, padding='pre')
@@ -43,17 +43,19 @@ def generate_sentence(model, tokenizer, max_length, seed_text, num_words, temper
                 output_word = word
                 break
         seed_text += " " + output_word
-        word_probs.append((output_word, probabilities[0, predicted]))
+        context = (context + [output_word])[-3:]  # Update context with the new word
+        word_probs.append((output_word, probabilities[0, predicted], context.copy()))
     return seed_text, word_probs
 
-# Function to create a tree diagram
+# Function to create a tree diagram with context
 def create_tree_diagram(data):
     # Create a directed graph
     G = nx.DiGraph()
 
     # Add nodes and edges to the graph
-    for i, (word, prob) in enumerate(data):
-        G.add_node(i, label=word, probability=prob)
+    for i, (word, prob, context) in enumerate(data):
+        context_str = ' '.join(context)
+        G.add_node(i, label=f"{word} ({context_str})", probability=prob)
         if i > 0:
             G.add_edge(i - 1, i)
 
@@ -121,22 +123,9 @@ def create_tree_diagram(data):
                     ))
     return fig
 
-# Set up the UI
-st.title("🍔 McDeepNet 🍔")
-st.subheader("Trained on 20k McDonald's Reviews")
-st.caption("Welcome to McDeepNet! This project uses a Machine Learning (ML) model trained on 20,000 McDonald's reviews. It's an interesting application that employs Recurrent Neural Networks (RNNs) to learn patterns from these reviews and, subsequently, generates a unique review of its own. The model can produce varying types of output based on a seed text and a temperature parameter provided by the user. Checkout my github: https://github.com/zanepearton ")
-
-# Form to take user inputs
-with st.form(key='my_form'):
-    seed_text = st.text_input(label='Enter the seed text for sentence completion')
-    num_words = st.number_input(label='Enter the number of words to generate', min_value=1, max_value=100, value=5)
-    temperature = st.slider(label='Set temperature', min_value=0.1, max_value=3.0, value=1.0, step=0.1)
-    submit_button = st.form_submit_button(label='Generate Text')
-
 # Generate and display the output on form submission
 if submit_button:
     sentence, word_probs = generate_sentence(model, tokenizer, max_length, seed_text, num_words, temperature)
-    # st.write(word_probs)
     st.write(sentence)
     
     # Count word frequencies
@@ -144,7 +133,6 @@ if submit_button:
     # Create and display the tree diagram
     fig_tree = create_tree_diagram(word_probs)
     st.plotly_chart(fig_tree)
-
     
     # Create a DataFrame for the frequencies
     freq_df = pd.DataFrame(list(word_freq.items()), columns=['Word', 'Frequency'])
@@ -152,5 +140,3 @@ if submit_button:
     # Create a Plotly Express bar chart
     fig_bar = px.bar(freq_df, x='Word', y='Frequency', title='Word Frequencies')
     st.plotly_chart(fig_bar)
-
-
