@@ -211,11 +211,15 @@ with st.form(key='my_form'):
 # Generate and display the output on form submission
 if submit_button:
     sentence, word_probs = generate_sentence(model, tokenizer, max_length, seed_text, num_words, temperature)
-    st.write(word_probs)
+    # st.write(word_probs)
     st.write(sentence)
     
     # Count word frequencies
     word_freq = Counter(sentence.split())
+    # Create and display the tree diagram
+    fig_tree = create_tree_diagram(word_probs)
+    st.plotly_chart(fig_tree)
+
     
     # Create a DataFrame for the frequencies
     freq_df = pd.DataFrame(list(word_freq.items()), columns=['Word', 'Frequency'])
@@ -224,7 +228,4 @@ if submit_button:
     fig_bar = px.bar(freq_df, x='Word', y='Frequency', title='Word Frequencies')
     st.plotly_chart(fig_bar)
 
-    # Create and display the tree diagram
-    fig_tree = create_tree_diagram(word_probs)
-    st.plotly_chart(fig_tree)
 
