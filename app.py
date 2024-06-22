@@ -47,7 +47,6 @@ def generate_sentence(model, tokenizer, max_length, seed_text, num_words, temper
         word_probs.append((output_word, probabilities[0, predicted]))
     return seed_text, word_probs
 
-# Function to create a tree diagram
 def create_tree_diagram(data):
     # Create a directed graph
     G = nx.DiGraph()
@@ -96,18 +95,22 @@ def create_tree_diagram(data):
         x=node_x, y=node_y,
         mode='markers+text',
         text=node_text,
+        textposition='top center',
         marker=dict(
             showscale=True,
             colorscale='YlGnBu',
-            size=1,
+            size=10,  # Adjust node size as needed
             color=node_color,
             colorbar=dict(
-                thickness=10,
+                thickness=15,
                 title='Probability',
                 xanchor='left',
                 titleside='right'
             ),
-            line_width=1))
+            line_width=1),
+        textfont=dict(
+            size=10  # Adjust text size as needed
+        ))
 
     # Create the figure
     fig = go.Figure(data=[edge_trace, node_trace],
