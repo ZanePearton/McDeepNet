@@ -362,7 +362,6 @@ def generate_sentence(model, tokenizer, max_length, seed_text, num_words, temper
         word_probs.append((output_word, probabilities[predicted], context.copy()))
     return seed_text, word_probs
 
-# Function to create a tree diagram with clearer context
 def create_tree_diagram(data):
     # Create a directed graph
     G = nx.DiGraph()
@@ -370,12 +369,12 @@ def create_tree_diagram(data):
     # Add nodes and edges to the graph
     for i, (word, prob, context) in enumerate(data):
         main_node = f"main_{i}"
-        G.add_node(main_node, label=word, probability=prob)
+        G.add_node(main_node, label=word, probability=prob, is_main=True)
         
         # Add context nodes and edges
         for j, ctx_word in enumerate(context):
             ctx_node = f"ctx_{i}_{j}"
-            G.add_node(ctx_node, label=ctx_word, probability=0)  # Context nodes have no probability
+            G.add_node(ctx_node, label=ctx_word, probability=0, is_main=False)  # Context nodes have no probability
             G.add_edge(ctx_node, main_node)  # Connect context word to current main word
 
     # Get node positions for the layout
@@ -396,7 +395,7 @@ def create_tree_diagram(data):
 
     edge_trace = go.Scatter(
         x=edge_x, y=edge_y,
-        line=dict(width=1, color='#888'),
+        line=dict(width=2, color='#888'),
         hoverinfo='none',
         mode='lines')
 
@@ -405,12 +404,18 @@ def create_tree_diagram(data):
     node_y = []
     node_text = []
     node_color = []
+    node_size = []
     for node in G.nodes():
         x, y = pos[node]
         node_x.append(x)
         node_y.append(y)
         node_text.append(f"{G.nodes[node]['label']} ({G.nodes[node]['probability']:.2f})" if G.nodes[node]['probability'] > 0 else G.nodes[node]['label'])
-        node_color.append(G.nodes[node]['probability'])
+        if G.nodes[node]['is_main']:
+            node_color.append(G.nodes[node]['probability'])
+            node_size.append(15)
+        else:
+            node_color.append(0)  # Darker nodes for context words
+            node_size.append(10)
 
     node_trace = go.Scatter(
         x=node_x, y=node_y,
@@ -419,7 +424,7 @@ def create_tree_diagram(data):
         marker=dict(
             showscale=True,
             colorscale='YlGnBu',
-            size=10,
+            size=node_size,
             color=node_color,
             colorbar=dict(
                 thickness=15,
@@ -441,6 +446,7 @@ def create_tree_diagram(data):
                         yaxis=dict(showgrid=False, zeroline=False)
                     ))
     return fig
+
 
 # Set up the UI
 st.title("🍔 McDeepNet 🍔")
