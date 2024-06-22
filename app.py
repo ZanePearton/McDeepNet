@@ -211,13 +211,14 @@ def create_tree_diagram(data):
 
     # Add nodes and edges to the graph
     for i, (word, prob, context) in enumerate(data):
-        G.add_node(i, label=word, probability=prob)
-
+        main_node = f"main_{i}"
+        G.add_node(main_node, label=word, probability=prob)
+        
         # Add context nodes and edges
         for j, ctx_word in enumerate(context):
             ctx_node = f"ctx_{i}_{j}"
             G.add_node(ctx_node, label=ctx_word, probability=0)  # Context nodes have no probability
-            G.add_edge(ctx_node, i)  # Connect context word to current main word
+            G.add_edge(ctx_node, main_node)  # Connect context word to current main word
 
     # Get node positions for the layout
     pos = nx.spring_layout(G)
