@@ -4,7 +4,8 @@ import pickle
 import json
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import model_from_json
+from tensorflow.keras.models import model_from_json, Sequential
+from tensorflow.keras.layers import Embedding, LSTM, Dense
 from tensorflow.keras.initializers import Orthogonal
 import h5py
 import plotly.express as px
@@ -26,7 +27,14 @@ def load_and_adjust_model(model_path):
             del layer_config['config']['time_major']
 
     # Recreate the model from the adjusted configuration
-    model = model_from_json(json.dumps(model_config), custom_objects={'Orthogonal': Orthogonal})
+    custom_objects = {
+        'Orthogonal': Orthogonal,
+        'Sequential': Sequential,
+        'Embedding': Embedding,
+        'LSTM': LSTM,
+        'Dense': Dense
+    }
+    model = model_from_json(json.dumps(model_config), custom_objects=custom_objects)
 
     # Load weights
     model.load_weights(model_path)
