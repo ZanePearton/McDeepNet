@@ -107,7 +107,7 @@ def create_tree_diagram(data):
                 xanchor='left',
                 titleside='right'
             ),
-            line_width=2))
+            line_width=1))
 
     # Create the figure
     fig = go.Figure(data=[edge_trace, node_trace],
