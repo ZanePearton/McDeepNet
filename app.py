@@ -154,7 +154,6 @@
 #     fig_bar = px.bar(freq_df, x='Word', y='Frequency', title='Word Frequencies')
 #     st.plotly_chart(fig_bar)
 
-
 # library imports
 import streamlit as st
 import pickle
@@ -213,7 +212,7 @@ def create_tree_diagram(data):
     # Add nodes and edges to the graph
     for i, (word, prob, context) in enumerate(data):
         context_str = ' '.join(context)
-        G.add_node(i, label=f"{word} ({context_str})", probability=prob)
+        G.add_node(i, label=word, probability=prob, context=context_str)
         if i > 0:
             G.add_edge(i - 1, i)
 
