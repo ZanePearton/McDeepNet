@@ -3,6 +3,7 @@ import streamlit as st
 import pickle
 import numpy as np
 import pandas as pd
+import tensorflow as tf
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -10,7 +11,7 @@ import plotly.express as px
 from collections import Counter
 
 # Load the model
-model = load_model('text_generation_model.h5')
+model = load_model('text_generation_model.h5', custom_objects={'Orthogonal': tf.keras.initializers.Orthogonal()})
 
 # Load the tokenizer
 with open('tokenizer.pickle', 'rb') as handle:
@@ -33,7 +34,7 @@ def generate_sentence(model, tokenizer, max_length, seed_text, num_words, temper
         exp_preds = np.exp(probabilities)
         probabilities = exp_preds / np.sum(exp_preds)
 
-        predicted = np.random.choice(range(len(probabilities[0])), p = probabilities.ravel())
+        predicted = np.random.choice(range(len(probabilities[0])), p=probabilities.ravel())
         output_word = ""
         for word, index in tokenizer.word_index.items():
             if index == predicted:
@@ -61,10 +62,6 @@ if submit_button:
     st.write(word_probs)
     st.write(sentence)
     
-    # # Create dataframe to hold word probabilities and display in Streamlit
-    # prob_df = pd.DataFrame(word_probs, columns=["Word", "Probability"])
-    # st.dataframe(prob_df)
-
     # Count word frequencies
     word_freq = Counter(sentence.split())
     
@@ -73,11 +70,4 @@ if submit_button:
     
     # Create a Plotly Express bar chart
     fig = px.bar(freq_df, x='Word', y='Frequency', title='Word Frequencies')
-    # fig = px.scatter_3d(freq_df, x='1', y='1', z='1')
-    # fig = px.scatter_3d(df, x='sepal_length', y='sepal_width', z='petal_width',
-    #           color='green')
-    # Display the chart
     st.plotly_chart(fig)
-    # freq_df.show()
-
-    # Value of 'z' is not the name of a column in 'data_frame'. Expected one of ['Word', 'Frequency'] but received: word_probs
