@@ -99,10 +99,10 @@ def create_tree_diagram(data):
         marker=dict(
             showscale=True,
             colorscale='YlGnBu',
-            size=10,
+            size=1,
             color=node_color,
             colorbar=dict(
-                thickness=1,
+                thickness=10,
                 title='Probability',
                 xanchor='left',
                 titleside='right'
