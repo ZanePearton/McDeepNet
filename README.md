@@ -6,6 +6,7 @@ The application is built using [Streamlit](https://streamlit.io), a fast and eas
 
 - [Test it out! Link - mcdeeepnet.streamlit.app](https://mcdeeepnet.streamlit.app/)
 - [Dev.to Article documenting the project](https://dev.to/zanepearton/mcdeepnet-training-tensorflow-on-mcdonalds-reviews-21e)
+- [Raw data set](https://www.kaggle.com/datasets/nelgiriyewithana/mcdonalds-store-reviews)
 
 ## How it works
 
