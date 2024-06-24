@@ -6,6 +6,8 @@ The application is built using [Streamlit](https://streamlit.io), a fast and eas
 
 [Test it out! Link - mcdeeepnet.streamlit.app](https://mcdeeepnet.streamlit.app/)
 
+[Dev.to Article](https://dev.to/zanepearton/mcdeepnet-training-tensorflow-on-mcdonalds-reviews-21e )
+
 ## How it works
 
 This program reads in a seed text provided by the user along with the number of words to generate and the temperature. It then passes these inputs to the model to generate a review. 
