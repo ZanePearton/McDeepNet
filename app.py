@@ -125,6 +125,46 @@ def create_tree_diagram(data):
                     ))
     return fig
 
+# # Set up the UI
+# st.title("🍔 McDeepNet 🍔")
+# st.subheader("Trained on 20k McDonald's Reviews")
+# st.write("Welcome to McDeepNet! This project uses a Machine Learning (ML) model trained on 20,000 McDonald's reviews. It's an interesting application that employs Recurrent Neural Networks (RNNs) to learn patterns from these reviews and, subsequently, generates a unique review of its own. The model can produce varying types of output based on a seed text and a temperature parameter provided by the user.")
+# st.markdown("""
+# - [Checkout my GitHub](https://github.com/zanepearton)
+# - [My dev.to Article](https://dev.to/zanepearton/mcdeepnet-training-tensorflow-on-mcdonalds-reviews-21e)
+# """)
+
+# # Form to take user inputs
+# with st.form(key='my_form'):
+#     seed_text = st.text_input(label='Enter the seed text for sentence completion')
+#     num_words = st.number_input(label='Enter the number of words to generate', min_value=1, max_value=100, value=50)
+#     temperature = st.slider(label='Set temperature', min_value=0.1, max_value=3.0, value=1.0, step=0.1)
+#     submit_button = st.form_submit_button(label='Generate Text')
+
+# # Generate and display the output on form submission
+# if submit_button:
+#     sentence, word_probs = generate_sentence(model, tokenizer, max_length, seed_text, num_words, temperature)
+    
+#     st.text_area("Generated Text", value=sentence, height=150)
+    
+#     # Count word frequencies
+#     word_freq = Counter(sentence.split())
+    
+#     # Create and display the tree diagram
+#     fig_tree = create_tree_diagram(word_probs)
+#     st.plotly_chart(fig_tree)
+    
+#     # Create a DataFrame for the frequencies
+#     freq_df = pd.DataFrame(list(word_freq.items()), columns=['Word', 'Frequency'])
+    
+#     # Create a Plotly Express scatter plot
+#     fig_scatter = px.scatter(freq_df, x='Word', y='Frequency', size='Frequency', title='Word Frequencies', 
+#                              hover_name='Word', size_max=60)
+#     st.plotly_chart(fig_scatter)
+
+
+
+
 # Set up the UI
 st.title("🍔 McDeepNet 🍔")
 st.subheader("Trained on 20k McDonald's Reviews")
@@ -143,17 +183,21 @@ with st.form(key='my_form'):
 
 # Generate and display the output on form submission
 if submit_button:
-    sentence, word_probs = generate_sentence(model, tokenizer, max_length, seed_text, num_words, temperature)
+    sentence, word_probs = generate_sentence(None, None, None, seed_text, num_words, temperature)
     
-    st.text_area("Generated Text", value=sentence, height=150)
+    col1, col2 = st.columns(2)
     
-    # Count word frequencies
-    word_freq = Counter(sentence.split())
-    
-    # Create and display the tree diagram
-    fig_tree = create_tree_diagram(word_probs)
-    st.plotly_chart(fig_tree)
-    
+    with col1:
+        st.text_area("Generated Text", value=sentence, height=150, disabled=True)
+        
+    with col2:
+        # Count word frequencies
+        word_freq = Counter(sentence.split())
+        
+        # Create and display the tree diagram
+        fig_tree = create_tree_diagram(word_probs)
+        st.plotly_chart(fig_tree)
+        
     # Create a DataFrame for the frequencies
     freq_df = pd.DataFrame(list(word_freq.items()), columns=['Word', 'Frequency'])
     
