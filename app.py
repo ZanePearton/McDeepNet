@@ -145,7 +145,7 @@ with st.form(key='my_form'):
 if submit_button:
     sentence, word_probs = generate_sentence(model, tokenizer, max_length, seed_text, num_words, temperature)
     
-    st.text_area("Generated Text", value=sentence, height=150, disabled=True)
+    st.text_area("Generated Text", value=sentence, height=150)
     
     # Count word frequencies
     word_freq = Counter(sentence.split())
