@@ -6,7 +6,7 @@ The application is built using [Streamlit](https://streamlit.io), a fast and eas
 
 [Test it out! Link - mcdeeepnet.streamlit.app](https://mcdeeepnet.streamlit.app/)
 
-[Dev.to Article](https://dev.to/zanepearton/mcdeepnet-training-tensorflow-on-mcdonalds-reviews-21e )
+[Dev.to Article documenting the project](https://dev.to/zanepearton/mcdeepnet-training-tensorflow-on-mcdonalds-reviews-21e )
 
 ## How it works
 
