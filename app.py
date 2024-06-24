@@ -128,7 +128,9 @@ def create_tree_diagram(data):
 # Set up the UI
 st.title("🍔 McDeepNet 🍔")
 st.subheader("Trained on 20k McDonald's Reviews")
-st.caption("Welcome to McDeepNet! This project uses a Machine Learning (ML) model trained on 20,000 McDonald's reviews. It's an interesting application that employs Recurrent Neural Networks (RNNs) to learn patterns from these reviews and, subsequently, generates a unique review of its own. The model can produce varying types of output based on a seed text and a temperature parameter provided by the user. Checkout my github: https://github.com/zanepearton My dev.to Article: https://dev.to/zanepearton/mcdeepnet-training-tensorflow-on-mcdonalds-reviews-21e ")
+st.caption("Welcome to McDeepNet! This project uses a Machine Learning (ML) model trained on 20,000 McDonald's reviews. It's an interesting application that employs Recurrent Neural Networks (RNNs) to learn patterns from these reviews and, subsequently, generates a unique review of its own. The model can produce varying types of output based on a seed text and a temperature parameter provided by the user.")
+st.caption("Checkout my github: https://github.com/zanepearton")
+st.caption("My dev.to Article: https://dev.to/zanepearton/mcdeepnet-training-tensorflow-on-mcdonalds-reviews-21e")
 
 # Form to take user inputs
 with st.form(key='my_form'):
