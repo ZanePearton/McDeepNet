@@ -132,7 +132,7 @@ st.write("Welcome to McDeepNet! This project uses a Machine Learning (ML) model 
 st.markdown("""
 - [Checkout my GitHub](https://github.com/zanepearton)
 - [My dev.to Article](https://dev.to/zanepearton/mcdeepnet-training-tensorflow-on-mcdonalds-reviews-21e)
-- [Model trainined the following dataset](https://www.kaggle.com/datasets/nelgiriyewithana/mcdonalds-store-reviews)
+- [Model trained on the following dataset](https://www.kaggle.com/datasets/nelgiriyewithana/mcdonalds-store-reviews)
 """)
 
 # Form to take user inputs
